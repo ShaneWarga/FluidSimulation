@@ -1,0 +1,8 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (SDLProject.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Game.cpp
+C:\SDL Projects\Fluid Simulation\SDLProject\Game.cpp(64,37): warning C4101: 'oor': unreferenced local variable
+C:\SDL Projects\Fluid Simulation\SDLProject\Game.cpp(68,37): warning C4101: 'oor': unreferenced local variable
+C:\SDL Projects\Fluid Simulation\SDLProject\Game.cpp(72,37): warning C4101: 'oor': unreferenced local variable
+C:\SDL Projects\Fluid Simulation\SDLProject\Game.cpp(76,37): warning C4101: 'oor': unreferenced local variable
+C:\SDL Projects\Fluid Simulation\SDLProject\Game.cpp(107,14): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+  SDLProject.vcxproj -> C:\SDL Projects\Fluid Simulation\x64\Debug\GameEngine.exe

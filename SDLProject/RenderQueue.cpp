@@ -1,0 +1,34 @@
+#include "RenderQueue.h"
+
+RenderQueue::RenderQueue(SDL_Renderer* renderer) { mRenderer = renderer; }
+RenderQueue::~RenderQueue() {}
+
+void RenderQueue::Push(GameObject* object) {
+	renderQueue.push(object);
+}
+
+void RenderQueue::RenderOne() {
+	SDL_RenderClear(mRenderer);
+	renderQueue.front()->Render();
+	renderQueue.pop();
+	SDL_RenderPresent(mRenderer);
+}
+
+void RenderQueue::operator()() {
+	std::lock_guard<std::mutex> lock(renderMutex);
+	RenderAll();
+}
+
+void RenderQueue::RenderAll() {
+	while (!renderQueue.empty()) {
+		renderQueue.front()->Render();
+		renderQueue.pop();
+	}
+	SDL_RenderPresent(mRenderer);
+}
+
+void RenderQueue::Clear() {
+	while (!renderQueue.empty()) {
+		renderQueue.pop();
+	}
+}
