@@ -149,6 +149,7 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="CompileDirectives.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="ColorData.h" />

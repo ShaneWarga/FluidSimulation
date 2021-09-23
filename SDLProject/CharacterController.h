@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "CompileDirectives.h"
 #include <functional>
 
 class CharacterController
@@ -21,6 +22,9 @@ public:
 	void SetVelocity(Vector2 newVelocity);
 	void CreateWall(SDL_Event* e);
 	void CreateWater(SDL_Event* e);
+	void CreateWallStateUpdate(int index);
+	void CreateWaterStateUpdate(int index);
+	void ClearStateUpdate(int index);
 	void Clear(SDL_Event* e);
 
 };

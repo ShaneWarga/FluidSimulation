@@ -6,6 +6,7 @@
 #include "Cell.h"
 #include "InputManager.h"
 #include "CharacterController.h"
+#include "CompileDirectives.h"
 #include <SDL.h>
 #include <vector>
 #include <memory>

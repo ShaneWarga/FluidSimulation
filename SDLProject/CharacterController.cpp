@@ -1,5 +1,4 @@
 #include "CharacterController.h"
-#define CellDim 8
 CharacterController::CharacterController(std::vector<std::shared_ptr<GameObject>>* gameObjects) {
 	objects = gameObjects;
 	BindMethods();
@@ -41,50 +40,69 @@ void CharacterController::SetVelocity(Vector2 newVelocity) {
 }
 
 int get2DIndexCell(int x, int y) {
-	int coord = x + ((1280/ CellDim) * y);
+	int coord = x + ((WindowWidth/ CellSize) * y);
 	return coord;
 }
 
-//I am not constructing new cells only changing state from dead to either water or wall
-void CharacterController::CreateWall(SDL_Event* e) {
-	int index = get2DIndexCell(e->button.x / CellDim, e->button.y / CellDim);
-	if (index < 0 || index>70000) { return; }
+void CharacterController::CreateWallStateUpdate( int index) {
+	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		for (auto neighbor : objects->at(index)->neighbors) {
-			neighbor->state.get()->STATE_0 = true;
-			neighbor->state.get()->STATE_1 = false;
-			neighbor->state.get()->DEATH = false;
-		}
 		objects->at(index).get()->state.get()->STATE_0 = true;
 		objects->at(index).get()->state.get()->STATE_1 = false;
 		objects->at(index).get()->state.get()->DEATH = false;
 	}
 }
-void CharacterController::CreateWater(SDL_Event* e) {
-	int index = get2DIndexCell(e->button.x/CellDim, e->button.y/CellDim);
-	if (index < 0 || index>70000) { return; }
+
+void CharacterController::CreateWaterStateUpdate(int index) {
+	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		for (auto neighbor : objects->at(index)->neighbors) {
-			neighbor->state.get()->STATE_0 = false;
-			neighbor->state.get()->STATE_1 = true;
-			neighbor->state.get()->DEATH = false;
-		}		
 		objects->at(index).get()->state.get()->STATE_0 = false;
 		objects->at(index).get()->state.get()->STATE_1 = true;
 		objects->at(index).get()->state.get()->DEATH = false;
 	}
 }
-void CharacterController::Clear(SDL_Event* e) {
-	int index = get2DIndexCell(e->button.x / CellDim, e->button.y / CellDim);
-	if (index < 0 || index>70000) { return; }
+
+void CharacterController::ClearStateUpdate(int index) {
+	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		for (auto neighbor : objects->at(index)->neighbors) {
-			neighbor->state.get()->STATE_0 = false;
-			neighbor->state.get()->STATE_1 = false;
-			neighbor->state.get()->DEATH = true;
-		}
 		objects->at(index).get()->state.get()->STATE_0 = false;
 		objects->at(index).get()->state.get()->STATE_1 = false;
 		objects->at(index).get()->state.get()->DEATH = true;
 	}
+}
+
+//I am not constructing new cells only changing state from dead to either water or wall
+void CharacterController::CreateWall(SDL_Event* e) {
+	int index = get2DIndexCell(e->button.x / CellSize, e->button.y / CellSize);
+	int up = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) - 1);
+	int down = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) + 1);
+	int left = get2DIndexCell((e->button.x/ CellSize)-1, e->button.y / CellSize);
+	int right = get2DIndexCell((e->button.x/ CellSize)+1, e->button.y / CellSize);
+	CreateWallStateUpdate(index);
+	CreateWallStateUpdate(up);
+	CreateWallStateUpdate(down);
+	CreateWallStateUpdate(left);
+	CreateWallStateUpdate(right);
+}
+void CharacterController::CreateWater(SDL_Event* e) {
+	int index = get2DIndexCell(e->button.x / CellSize, e->button.y / CellSize);
+	int down = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) + 1);
+	int left = get2DIndexCell((e->button.x / CellSize) - 1, e->button.y / CellSize);
+	int right = get2DIndexCell((e->button.x / CellSize) + 1, e->button.y / CellSize);
+	CreateWaterStateUpdate(index);
+	CreateWaterStateUpdate(down);
+	CreateWaterStateUpdate(left);
+	CreateWaterStateUpdate(right);
+}
+void CharacterController::Clear(SDL_Event* e) {
+	int index = get2DIndexCell(e->button.x / CellSize, e->button.y / CellSize);
+	int up = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) - 1);
+	int down = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) + 1);
+	int left = get2DIndexCell((e->button.x / CellSize) - 1, e->button.y / CellSize);
+	int right = get2DIndexCell((e->button.x / CellSize) + 1, e->button.y / CellSize);
+	ClearStateUpdate(index);
+	ClearStateUpdate(up);
+	ClearStateUpdate(down);
+	ClearStateUpdate(left);
+	ClearStateUpdate(right);
 }
