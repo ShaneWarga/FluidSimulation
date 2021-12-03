@@ -1,11 +1,23 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (SDLProject.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(492,5): warning MSB8003: The WindowsSDKDir property is not defined. Some build tools may not be found.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(510,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (SDLProject.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Cell.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
   CharacterController.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  Circle.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
   Game.cpp
-C:\Users\shane\OneDrive\Desktop\FluidSimulation\SDLProject\Game.cpp(61,37): warning C4101: 'oor': unreferenced local variable
-C:\Users\shane\OneDrive\Desktop\FluidSimulation\SDLProject\Game.cpp(65,37): warning C4101: 'oor': unreferenced local variable
-C:\Users\shane\OneDrive\Desktop\FluidSimulation\SDLProject\Game.cpp(69,37): warning C4101: 'oor': unreferenced local variable
-C:\Users\shane\OneDrive\Desktop\FluidSimulation\SDLProject\Game.cpp(73,37): warning C4101: 'oor': unreferenced local variable
-C:\Users\shane\OneDrive\Desktop\FluidSimulation\SDLProject\Game.cpp(104,14): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  InputManager.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
   main.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  GameObject.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  Rectangle.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  RenderQueue.cpp
+C:\SDL Projects\FluidSimulation\SDL2-2.0.16\include\SDL_config.h(206,10): fatal error C1083: Cannot open include file: 'sdkddkver.h': No such file or directory
+  RigidBody.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\cstddef(12,10): fatal error C1083: Cannot open include file: 'stddef.h': No such file or directory
   Generating Code...
-  SDLProject.vcxproj -> C:\Users\shane\OneDrive\Desktop\FluidSimulation\x64\Debug\GameEngine.exe

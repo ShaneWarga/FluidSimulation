@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "CellStates.h"
 #include <vector>
+
 class Cell : public GameObject
 {
 private:

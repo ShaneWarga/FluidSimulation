@@ -17,7 +17,6 @@ public:
 	void Push(GameObject* object);
 	void RenderOne();
 	void RenderAll();
-	void operator()();
 	void Clear();
 };
 

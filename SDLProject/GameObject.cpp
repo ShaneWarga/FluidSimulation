@@ -3,27 +3,27 @@
 
 GameObject& GameObject::SetRenderer(SDL_Renderer* renderer) {
 	state = std::unique_ptr<CellStates>(new CellStates());
-	state.get()->INIT = true;
-	state.get()->STATE_0 = false;
-	state.get()->STATE_1 = false;
-	state.get()->STATE_2 = false;
-	state.get()->DEATH = false;
+	state->INIT = true;
+	state->STATE_0 = false;
+	state->STATE_1 = false;
+	state->STATE_2 = false;
+	state->DEATH = false;
 	mRenderer = renderer;
 	return *this;
 }
 
 GameObject& GameObject::SetColorData(int red, int green, int blue, int alpha) {
-	objectColor.get()->RED = red;
-	objectColor.get()->GREEN = green;
-	objectColor.get()->BLUE = blue;
-	objectColor.get()->ALPHA = alpha;
+	objectColor->RED = red;
+	objectColor->GREEN = green;
+	objectColor->BLUE = blue;
+	objectColor->ALPHA = alpha;
 	return *this;
 }
 
 
 void GameObject::SetPosition(Vector2 pos) {
-	position.get()->x = pos.x;
-	position.get()->y = pos.y;
+	position->x = pos.x;
+	position->y = pos.y;
 	Update();
 }
 

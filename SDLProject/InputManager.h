@@ -4,6 +4,8 @@
 #include <functional>
 #include <map>
 #include <memory>
+#define KEYBOARD_KEYS 332
+#define MOUSE_KEYS 5
 
 
 class InputManager

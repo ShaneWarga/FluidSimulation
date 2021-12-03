@@ -12,7 +12,6 @@ protected:
 	SDL_Renderer* mRenderer;
 	std::unique_ptr<ColorData> objectColor;
 	std::unique_ptr<Vector2> position;
-
 public:
 	virtual void Render() = 0;
 	virtual void Update() = 0;

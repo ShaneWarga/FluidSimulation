@@ -5,10 +5,10 @@ InputManager::InputManager() {
 		new std::map<SDL_Keycode, std::function<void(SDL_Event*)>>());
 	MouseInputMap = std::unique_ptr<std::map<SDL_Keycode, std::function<void(SDL_Event*)>>>(
 		new std::map<SDL_Keycode, std::function<void(SDL_Event*)>>());
-	for (int i = 0; i < 332; i++) {
+	for (int i = 0; i < KEYBOARD_KEYS; i++) {
 		Keys[i] = false;
 	}
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < MOUSE_KEYS; i++) {
 		MouseKeys[i] = false;
 	}
 }
@@ -17,10 +17,10 @@ void InputManager::AddInputKey(SDL_EventType eventType, SDL_Keycode key, std::fu
 	switch (eventType)
 	{
 	case SDL_KEYDOWN:
-		keyDownInputMap.get()->insert(std::pair<SDL_Keycode, std::function<void(SDL_Event*)>>(key, f));
+		keyDownInputMap->insert(std::pair<SDL_Keycode, std::function<void(SDL_Event*)>>(key, f));
 		break;
 	case SDL_MOUSEBUTTONDOWN:
-		MouseInputMap.get()->insert(std::pair<SDL_Keycode, std::function<void(SDL_Event*)>>(key, f));
+		MouseInputMap->insert(std::pair<SDL_Keycode, std::function<void(SDL_Event*)>>(key, f));
 		break;
 	default:
 		break;
@@ -31,12 +31,12 @@ void InputManager::RemoveInputKey(SDL_EventType eventType, SDL_Keycode key) {
 	switch (eventType)
 	{
 	case SDL_KEYDOWN:
-		if (keyDownInputMap.get()->at(key)) {
-			keyDownInputMap.get()->erase(key);
+		if (keyDownInputMap->at(key)) {
+			keyDownInputMap->erase(key);
 		}
 	case SDL_MOUSEBUTTONDOWN:
-		if (MouseInputMap.get()->at(key)) {
-			MouseInputMap.get()->erase(key);
+		if (MouseInputMap->at(key)) {
+			MouseInputMap->erase(key);
 		}
 	default:
 		break;
@@ -63,7 +63,7 @@ void InputManager::ReplaceInputKey(SDL_EventType eventType, SDL_Keycode key, std
 void InputManager::HandleKeyEvent(SDL_Event* event) {
 	for (auto const& keyDown : *keyDownInputMap.get()) {
 		if (Keys[keyDown.first]) {
-			keyDownInputMap.get()->at(keyDown.first)(event);
+			keyDownInputMap->at(keyDown.first)(event);
 		}
 	}
 }
@@ -71,7 +71,7 @@ void InputManager::HandleKeyEvent(SDL_Event* event) {
 void InputManager::HandleMouseEvent(SDL_Event* event) {
 	for (auto const& keyDown : *MouseInputMap.get()) {
 		if (MouseKeys[keyDown.first]) {
-			MouseInputMap.get()->at(keyDown.first)(event);
+			MouseInputMap->at(keyDown.first)(event);
 		}
 	}
 }
@@ -97,6 +97,15 @@ void InputManager::PollEvent() {
 		case SDL_MOUSEBUTTONUP:
 			MouseKeys[e.button.button] = false;
 			break;
+		case SDL_WINDOWEVENT:
+			switch (e.window.event)
+			{
+			case SDL_WINDOWEVENT_CLOSE:
+				SDL_Quit();
+				exit(3);
+			default:
+				break;
+			}
 		default:
 			break;
 		}

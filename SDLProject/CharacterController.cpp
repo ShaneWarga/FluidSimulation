@@ -47,27 +47,27 @@ int get2DIndexCell(int x, int y) {
 void CharacterController::CreateWallStateUpdate( int index) {
 	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		objects->at(index).get()->state.get()->STATE_0 = true;
-		objects->at(index).get()->state.get()->STATE_1 = false;
-		objects->at(index).get()->state.get()->DEATH = false;
+		objects->at(index)->state->STATE_0 = true;
+		objects->at(index)->state->STATE_1 = false;
+		objects->at(index)->state->DEATH = false;
 	}
 }
 
 void CharacterController::CreateWaterStateUpdate(int index) {
 	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		objects->at(index).get()->state.get()->STATE_0 = false;
-		objects->at(index).get()->state.get()->STATE_1 = true;
-		objects->at(index).get()->state.get()->DEATH = false;
+		objects->at(index)->state->STATE_0 = false;
+		objects->at(index)->state->STATE_1 = true;
+		objects->at(index)->state->DEATH = false;
 	}
 }
 
 void CharacterController::ClearStateUpdate(int index) {
 	if (index < 0 || index>objects->size()) { return; }
 	if (objects->at(index)) {
-		objects->at(index).get()->state.get()->STATE_0 = false;
-		objects->at(index).get()->state.get()->STATE_1 = false;
-		objects->at(index).get()->state.get()->DEATH = true;
+		objects->at(index)->state->STATE_0 = false;
+		objects->at(index)->state->STATE_1 = false;
+		objects->at(index)->state->DEATH = true;
 	}
 }
 
@@ -86,10 +86,12 @@ void CharacterController::CreateWall(SDL_Event* e) {
 }
 void CharacterController::CreateWater(SDL_Event* e) {
 	int index = get2DIndexCell(e->button.x / CellSize, e->button.y / CellSize);
+	int up = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) - 1);
 	int down = get2DIndexCell(e->button.x / CellSize, (e->button.y / CellSize) + 1);
 	int left = get2DIndexCell((e->button.x / CellSize) - 1, e->button.y / CellSize);
 	int right = get2DIndexCell((e->button.x / CellSize) + 1, e->button.y / CellSize);
 	CreateWaterStateUpdate(index);
+	CreateWaterStateUpdate(up);
 	CreateWaterStateUpdate(down);
 	CreateWaterStateUpdate(left);
 	CreateWaterStateUpdate(right);

@@ -13,6 +13,7 @@
 #include <time.h>
 #include <stdexcept>
 #include <thread>
+#include <algorithm>
 
 class Game
 {
@@ -24,7 +25,8 @@ private:
 	std::unique_ptr<InputManager> inputManager;
 	std::unique_ptr<CharacterController> controller;
 	std::thread renderThread;
-
+	std::vector<int> randIndex;
+	std::unique_ptr<RenderQueue> renderObjects;
 public:
 	SDL_Window* mWindow;
 	bool mIsRunning;
@@ -34,5 +36,9 @@ public:
 	void GenerateOutput(double deltaTime);
 	bool Initialize();
 	void CreateObjects();
+	void UpdateAll();
+	std::thread RenderRegion(int start, int end);
+	void PushAll();
+	std::thread DefineNeighbors(int start, int end);
 };
 

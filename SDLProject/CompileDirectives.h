@@ -1,4 +1,4 @@
 #pragma once
-#define WindowWidth 1280
-#define WindowHeight 720
-#define CellSize 8
+#define WindowWidth 1600
+#define WindowHeight 900
+#define CellSize 10

@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\shane\OneDrive\Desktop\FluidSimulation\x64\Debug\GameEngine.exe</FullPath>
+      <FullPath>C:\SDL Projects\FluidSimulation\x64\Debug\GameEngine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

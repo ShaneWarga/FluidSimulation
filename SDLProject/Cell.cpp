@@ -8,10 +8,10 @@ Cell::Cell(std::unique_ptr<Vector2> initialPosition, int size) {
 	cell = std::unique_ptr<SDL_Rect>(new SDL_Rect());
 	objectColor = std::unique_ptr<ColorData>(new ColorData());
 	position = std::move(initialPosition);
-	cell.get()->x = position.get()->x;
-	cell.get()->y = position.get()->y;
-	cell.get()->w = size;
-	cell.get()->h = size;
+	cell->x = position->x;
+	cell->y = position->y;
+	cell->w = size;
+	cell->h = size;
 }
 
 Cell::~Cell() {
@@ -23,18 +23,18 @@ Cell::~Cell() {
 
 
 void Cell::Render() {
-	SDL_SetRenderDrawColor(mRenderer, objectColor.get()->RED, objectColor.get()->GREEN, objectColor.get()->BLUE, objectColor.get()->ALPHA);
+	SDL_SetRenderDrawColor(mRenderer, objectColor->RED, objectColor->GREEN, objectColor->BLUE, objectColor->ALPHA);
 	SDL_RenderFillRect(mRenderer, cell.get());
 }
 
 void Cell::Update() {
 	//if dead set to dead and return
-	if (state.get()->DEATH) {
+	if (state->DEATH) {
 		SetColorData(0, 0, 0, 255);
 		return;
 	}
 	//wall change to white then return
-	if (state.get()->STATE_0) {
+	if (state->STATE_0) {
 		SetColorData(255,255,255, 255);
 		return;
 	}
@@ -42,14 +42,14 @@ void Cell::Update() {
 	go down if possible
 	go left or right if possible
 	*/
-	if (state.get()->STATE_1) {
+	if (state->STATE_1) {
 		SetColorData(0, 0, 255, 255);
 		for (auto neighbor : neighbors) {
 			if (neighbor->state->DEATH) {
-				neighbor->state.get()->STATE_1 = true;
-				neighbor->state.get()->DEATH = false;
-				state.get()->DEATH = true;
-				state.get()->STATE_0 = false;
+				neighbor->state->STATE_1 = true;
+				neighbor->state->DEATH = false;
+				state->DEATH = true;
+				state->STATE_0 = false;
 				return;
 			}
 		}

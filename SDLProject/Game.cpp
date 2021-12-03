@@ -16,21 +16,46 @@ Game::Game() {
 	playerPositionX = 0;
 	playerPositionY = 0;
 	inputManager = std::unique_ptr<InputManager>(new InputManager());
+	
 }
 
-
+std::thread Game::DefineNeighbors(int start, int end) {
+	return std::thread([this, start, end] {
+		for (int i = start; i < end; i++) {
+			std::shared_ptr<GameObject> currentCell;
+			for (int j = 0; j < WindowHeight / CellSize; j++) {
+				try {
+					currentCell = gameObjects.at(get2DIndex(i, j, WindowWidth / CellSize));
+				}
+				catch (const std::out_of_range& oor) { return; }
+				try {
+					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i, j + 1, WindowWidth / CellSize))));
+				}
+				catch (const std::out_of_range& oor) {}
+				try {
+					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i - 1, j, WindowWidth / CellSize))));
+				}
+				catch (const std::out_of_range& oor) {}
+				try {
+					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i + 1, j, WindowWidth / CellSize))));
+				}
+				catch (const std::out_of_range& oor) {}
+			}
+		}
+	});
+}
 
 void Game::CreateObjects() {
 	controller = std::unique_ptr<CharacterController>(new CharacterController((&gameObjects)));
-	inputManager.get()->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT, *controller.get()->createWater.get());
-	inputManager.get()->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_RIGHT, *controller.get()->createWall.get());
-	inputManager.get()->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_MIDDLE, *controller.get()->clear.get());
+	inputManager->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT, *controller->createWater);
+	inputManager->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_RIGHT, *controller->createWall);
+	inputManager->AddInputKey(SDL_MOUSEBUTTONDOWN, SDL_BUTTON_MIDDLE, *controller->clear);
 
 	for (int j = 0; j < WindowHeight / CellSize; j++) {
 		for (int i = 0; i < WindowWidth / CellSize; i++) {
 			std::unique_ptr<Vector2> initPos = std::unique_ptr<Vector2>(new Vector2());
-			initPos.get()->x = i * CellSize;
-			initPos.get()->y = j * CellSize;
+			initPos->x = i * CellSize;
+			initPos->y = j * CellSize;
 			std::shared_ptr<GameObject> cell = std::shared_ptr<GameObject>(new Cell(std::move(initPos), CellSize));
 			cell->SetRenderer(mRenderer);
 			if(j > (WindowWidth / CellSize) / 2) {
@@ -51,55 +76,66 @@ void Game::CreateObjects() {
 		}
 	}
 	std::vector<std::thread> neighborThreads;
-	for (int i = 0; i < WindowWidth / CellSize; i++) {
-		neighborThreads.push_back(std::thread([this, i] {
-			std::shared_ptr<GameObject> currentCell;
-			for (int j = 0; j < WindowHeight / CellSize; j++) {
-				try {
-					currentCell = gameObjects.at(get2DIndex(i, j, WindowWidth / CellSize));
-				}
-				catch (const std::out_of_range& oor) { return; }
-				try {
-					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i, j + 1, WindowWidth / CellSize))));
-				}
-				catch (const std::out_of_range& oor) {}
-				try {
-					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i - 1, j, WindowWidth / CellSize))));
-				}
-				catch (const std::out_of_range& oor) {}
-				try {
-					currentCell->neighbors.push_back(gameObjects.at(size_t(get2DIndex(i + 1, j, WindowWidth / CellSize))));
-				}
-				catch (const std::out_of_range& oor) {}}
-			}));
+	int threadTotal = std::thread::hardware_concurrency();
+	for (int threadCount = 0; threadCount < threadTotal; threadCount++) {
+		neighborThreads.push_back(DefineNeighbors(
+			(WindowWidth * threadCount)/(CellSize*threadTotal),
+			(WindowWidth * (threadCount + 1))/(CellSize * threadTotal)
+		));
 	}
 	for (int i = 0; i < neighborThreads.size(); i++) {
 		neighborThreads[i].join();
 	}
+	for (int i = 0; i < gameObjects.size(); i++) {
+		randIndex.push_back(i);
+	}
 }
 
+void Game::UpdateAll() {
+	for (int i = 0; i < randIndex.size(); i++) {
+		gameObjects[randIndex[i]]->Update();
+	}
+}
 
+std::thread Game::RenderRegion(int start, int end) {
+	return std::thread([this, start, end] {
+		for (int i = start; i < end; i++) {
+			std::shared_ptr<GameObject> currentCell;
+			for (int j = 0; j < WindowHeight / CellSize; j++) {
+				renderObjects->Push(gameObjects[get2DIndex(i, j, WindowWidth / CellSize)].get());
+			}
+		}
+	});
+}
+
+void Game::PushAll() {
+	std::vector<std::thread> threads;
+	int threadTotal = 1;
+	for (int threadCount = 0; threadCount < threadTotal; threadCount++) {
+		threads.push_back(RenderRegion(
+			(WindowWidth * threadCount) / (CellSize * threadTotal),
+			(WindowWidth * (threadCount + 1)) / (CellSize * threadTotal)
+		));
+	}
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i].join();
+	}
+}
 
 void Game::GenerateOutput(double deltaTime) {
 	updateCounter++;
 	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(mRenderer);
-	RenderQueue renderObjects(mRenderer);
 	if (gameObjects.empty()) { CreateObjects(); };
 	if (!gameObjects.empty()) {
 		while (true) {
 			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 			SDL_RenderClear(mRenderer);
-			inputManager.get()->PollEvent();
-			for (int j = WindowHeight / CellSize - 1; j >= 0; j--) {
-				for (int i = WindowWidth / CellSize - 1; i >= 0 ; i--) {
-					gameObjects[get2DIndex(i, j, WindowWidth/CellSize)].get()->Update();
-				}
-				for (int i = WindowWidth / CellSize - 1; i >= 0; i--) {
-					renderObjects.Push(gameObjects[get2DIndex(i, j, WindowWidth / CellSize)].get());
-				}
-			}
-			renderObjects.RenderAll();
+			inputManager->PollEvent();
+			std::random_shuffle(randIndex.begin(), randIndex.end());
+			PushAll(); 
+			renderObjects->RenderAll();
+			UpdateAll();
 			SDL_UpdateWindowSurface(mWindow);
 			SDL_Delay(deltaTime);
 		}
@@ -124,7 +160,7 @@ bool Game::Initialize() {
 		SDL_Log("Failed to create renderer %s", SDL_GetError());
 		return false;
 	}
-
+	renderObjects = std::unique_ptr<RenderQueue>(new RenderQueue(mRenderer));
 	
 	return true;
 }

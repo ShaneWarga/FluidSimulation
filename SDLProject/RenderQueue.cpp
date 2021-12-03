@@ -14,11 +14,6 @@ void RenderQueue::RenderOne() {
 	SDL_RenderPresent(mRenderer);
 }
 
-void RenderQueue::operator()() {
-	std::lock_guard<std::mutex> lock(renderMutex);
-	RenderAll();
-}
-
 void RenderQueue::RenderAll() {
 	while (!renderQueue.empty()) {
 		renderQueue.front()->Render();
